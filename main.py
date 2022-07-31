@@ -21,7 +21,7 @@ def scan(canvas): #creates the scan lines that show the robot doing a 360 degree
         degree -= ten_rad
 
         counter += 1
-        print(counter)
+        
 #--------------------------------------------------
 def find_coord(event):  #Used to check how the coordinates work inside the canvas
     print(event.x,event.y)
