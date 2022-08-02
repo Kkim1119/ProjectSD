@@ -1,51 +1,65 @@
-from tkinter import *
 import time
 import math
 from math import *
+from PIL import Image, ImageDraw
 
-def scan(canvas): #creates the scan lines that show the robot doing a 360 degree scan
+#---------------------------------------------
+def scan(img):
     degree = 0
-    counter = 0 #method of checking that 36 lines are made
-    ten_rad = 10 * (pi/180) #Changes 10 degrees into radians
-    #Radians is the default for cosine. So any value given to cos and sin is received as a radian
+    pixels = 1
+    ten_rad = 10 * (pi/180)
 
-    #Sets the coordinates of the end of the line in relation to the robot's coordinates
+    px = img.load()
+    print(px [ROBOT_X+1, ROBOT_Y+1])
+
     while not(degree <= -(2*pi-ten_rad)):
-        new_line_x = (ROBOT_X * cos(degree)) + ROBOT_X
-        new_line_y = (ROBOT_Y * sin(degree)) + ROBOT_Y
+        init_x = int((pixels * cos(degree))) + ROBOT_X
+        init_y = int((pixels * sin(degree))) + ROBOT_Y
+        px[init_x,init_y] = (0,0,255)
+        init2_x = int(((pixels + 1) * cos(degree))) + ROBOT_X
+        init2_y = int(((pixels + 1) * sin(degree))) + ROBOT_Y
 
-        canvas.create_line(ROBOT_X, ROBOT_Y, new_line_x, new_line_y)
-        canvas.update()
+        next_pixel = px[init2_x,init2_y]
+        if(next_pixel[0]==0 and next_pixel[1]==0 and next_pixel[2]==0):
+            degree -= ten_rad
+            pixels = 1
+        else:
+            pixels += 1
+            init_x -= ROBOT_X
+            init_y -= ROBOT_Y
+            init2_x -= ROBOT_X
+            init2_y -= ROBOT_Y
 
-        time.sleep(0.1)
-        degree -= ten_rad
-
-        counter += 1
-
-#--------------------------------------------------
-def find_coord(event):  #Used to check how the coordinates work inside the canvas
-    print(event.x,event.y)
-
-#--------------------------------------------------
-window = Tk()
+#------------------------------------------------
+w, h = 1000, 1000
+room = [(100, 100), (700, 700)]
+object = [(150, 150), (300, 400)]
+robot = [(490,490),(510,510)]
 
 ROBOT_X = 500
 ROBOT_Y = 500
 
-room = Canvas(window, height= 600, width=600)
-room.pack()
+# creating new Image object
+img = Image.new("RGB", (w, h), color="white")
+px = img.load()
 
-room.bind("<Button-1>",find_coord)
+# create line image
+img1 = ImageDraw.Draw(img)  #Draws the room border(img1 -> room border)
+img1.rectangle(room, outline="#000000", width=7)
 
-robot_image = PhotoImage(file="robot.png")
-robot_image = robot_image.zoom(5) #Makes the image 5 times bigger
-robot_image = robot_image.subsample(32) #shrinks down the image(higher number -> gets smaller
 
-robot = room.create_image(ROBOT_X,ROBOT_Y, image=robot_image)
-room.create_rectangle(100, 100, 250, 250, fill="Black")
+img2 = ImageDraw.Draw(img)
+img2.rectangle(object, fill="#000000")
 
-scan(room)
+img3 = ImageDraw.Draw(img)
+img3.rectangle(robot, fill="red")
 
-window.mainloop()
+px[ROBOT_X,ROBOT_Y] = (0,0,255)
 
+scan(img)
+
+img.show()
+
+#time.sleep(5)
+#img.show()
 
