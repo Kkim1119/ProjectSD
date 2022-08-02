@@ -11,7 +11,7 @@ def scan(robot_x, robot_y, img):
     ten_rad = 10 * (pi/180)
     coord_list = []
     scan_px = img.load()
-    print(scan_px [robot_x+1, robot_y+1])
+    #print(scan_px [robot_x+1, robot_y+1])
 
     while not(degree <= -(2*pi-ten_rad)):
         init_x = int((pixels * cos(degree))) + robot_x
@@ -46,17 +46,13 @@ def draw_points(list, img):
             final_dots = [(test_list[0][0], test_list[0][1]), (test_list[len(test_list)-1][0], test_list[len(test_list)-1][1])]
             connect.line(final_dots, fill="red")
 
+#------------------------------------------------
 w, h = 1000, 1000
 room = [(100, 100), (700, 700)]
 object = [(150, 150), (300, 400)]
-
-#ROBOT_X = 500
-#ROBOT_Y = 500
 ROOM_BORDER_WIDTH = 7
+ROBOT_WIDTH = 5
 
-rand_x = random.randint(100 + ROOM_BORDER_WIDTH, 700 - ROOM_BORDER_WIDTH)
-rand_y = random.randint(100,700)
-robot = [(rand_x-10,rand_y-10),(rand_x+10,rand_y+10)]
 # creating new Image object
 main_img = Image.new("RGB", (w, h), color="white")
 px = main_img.load()
@@ -66,18 +62,25 @@ points_img = Image.new("RGB", (w, h), color="white")
 img1 = ImageDraw.Draw(main_img)  #Draws the room border(img1 -> room border)
 img1.rectangle(room, outline="#000000", width=ROOM_BORDER_WIDTH)
 
-
 img2 = ImageDraw.Draw(main_img)
 img2.rectangle(object, fill="#000000")
+
+rand_x = random.randint(100 + ROOM_BORDER_WIDTH + ROBOT_WIDTH, 700 - ROOM_BORDER_WIDTH-ROBOT_WIDTH) #allows the robot square to be inside room even if random spawns it right next to a border
+rand_y = random.randint(100 + ROOM_BORDER_WIDTH + ROBOT_WIDTH,700 - ROOM_BORDER_WIDTH-ROBOT_WIDTH) #allows the robot square to be inside room even if random spawns it right next to a border
+
+while(px[rand_x,rand_y][0] == 0 and px[rand_x,rand_y][1] == 0 and px[rand_x,rand_y][2] == 0):
+    rand_x = random.randint(100 + ROOM_BORDER_WIDTH + ROBOT_WIDTH,
+                            700 - ROOM_BORDER_WIDTH - ROBOT_WIDTH)
+    rand_y = random.randint(100 + ROOM_BORDER_WIDTH + ROBOT_WIDTH,
+                            700 - ROOM_BORDER_WIDTH - ROBOT_WIDTH)
+    
+px[rand_x,rand_y] = (0,0,255)
+robot = [(rand_x-10,rand_y-10),(rand_x+10,rand_y+10)]
 
 img3 = ImageDraw.Draw(main_img)
 img3.rectangle(robot, fill="red")
 
-px[rand_x,rand_y] = (0,0,255)
-
-
-
-print(test_list := scan(rand_x,rand_y,main_img))
+test_list = scan(rand_x,rand_y,main_img)
 #draw_points(test_list, points_img)
 main_img.show()
 #points_img.show()
