@@ -1,5 +1,6 @@
 import time
 import math
+import random
 from math import *
 from PIL import Image, ImageDraw
 
@@ -48,11 +49,14 @@ def draw_points(list, img):
 w, h = 1000, 1000
 room = [(100, 100), (700, 700)]
 object = [(150, 150), (300, 400)]
-robot = [(490,490),(510,510)]
 
-ROBOT_X = 500
-ROBOT_Y = 500
+#ROBOT_X = 500
+#ROBOT_Y = 500
+ROOM_BORDER_WIDTH = 7
 
+rand_x = random.randint(100 + ROOM_BORDER_WIDTH, 700 - ROOM_BORDER_WIDTH)
+rand_y = random.randint(100,700)
+robot = [(rand_x-10,rand_y-10),(rand_x+10,rand_y+10)]
 # creating new Image object
 main_img = Image.new("RGB", (w, h), color="white")
 px = main_img.load()
@@ -60,7 +64,7 @@ px = main_img.load()
 points_img = Image.new("RGB", (w, h), color="white")
 # create line image
 img1 = ImageDraw.Draw(main_img)  #Draws the room border(img1 -> room border)
-img1.rectangle(room, outline="#000000", width=7)
+img1.rectangle(room, outline="#000000", width=ROOM_BORDER_WIDTH)
 
 
 img2 = ImageDraw.Draw(main_img)
@@ -69,14 +73,14 @@ img2.rectangle(object, fill="#000000")
 img3 = ImageDraw.Draw(main_img)
 img3.rectangle(robot, fill="red")
 
-px[ROBOT_X,ROBOT_Y] = (0,0,255)
+px[rand_x,rand_y] = (0,0,255)
 
 
 
-print(test_list := scan(ROBOT_X,ROBOT_Y,main_img))
-draw_points(test_list, points_img)
+print(test_list := scan(rand_x,rand_y,main_img))
+#draw_points(test_list, points_img)
 main_img.show()
-points_img.show()
+#points_img.show()
 
 #time.sleep(5)
 #img.show()
