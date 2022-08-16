@@ -35,7 +35,7 @@ def scan(robot_x, robot_y, img):
     return coord_list
 
 #------------------------------------------------
-'''def draw_points(test_list, img):  #original draw points function
+def draw_points(test_list, img):  #original draw points function
     dp_px = img.load()
     for i in range(len(test_list)-1):
         dp_px[test_list[i][0], test_list[i][1]] = (255, 0, 0)
@@ -44,7 +44,7 @@ def scan(robot_x, robot_y, img):
         connect.line(dots, fill="red")
         if(i == len(test_list)-2):
             final_dots = [(test_list[0][0], test_list[0][1]), (test_list[len(test_list)-1][0], test_list[len(test_list)-1][1])]
-            connect.line(final_dots, fill="red")'''
+            connect.line(final_dots, fill="red")
 
 #------------------------------------------------
 '''def draw_points(points_list, img):   #Trying something out: get pixel by pixel of line. If pixel = black, not replaced with line color(just stays black)
@@ -60,10 +60,10 @@ def scan(robot_x, robot_y, img):
             line_degree = math.atan(y_distance/x_distance)'''
 
 #------------------------------------------------
-def draw_points(test_list, img):  #function that only draws the points
+'''def draw_points(test_list, img):  #function that only draws the points
     dp_px = img.load()
     for i in range(len(test_list)-1):
-        dp_px[test_list[i][0], test_list[i][1]] = (255, 0, 0)
+        dp_px[test_list[i][0], test_list[i][1]] = (255, 0, 0)'''
 
 #------------------------------------------------
 w, h = 1000, 1000
@@ -84,7 +84,7 @@ img1.rectangle(room, outline="#000000", width=ROOM_BORDER_WIDTH)
 img2 = ImageDraw.Draw(main_img)
 img2.rectangle(object, fill="#000000", outline="#000000")
 
-NUMBER_OF_SCANS = 2000
+NUMBER_OF_SCANS = 1
 
 for i in range(NUMBER_OF_SCANS):
     rand_x = random.randint(100 + ROOM_BORDER_WIDTH + ROBOT_WIDTH, 700 - ROOM_BORDER_WIDTH-ROBOT_WIDTH) #allows the robot square to be inside room even if random spawns it right next to a border
@@ -104,10 +104,13 @@ for i in range(NUMBER_OF_SCANS):
 
     test_list = scan(rand_x,rand_y,main_img)
     draw_points(test_list, points_img)
+    main_img.show()
+    #points_img.show()
+    #time.sleep(1)
 
 
 #main_img.show()
 #time.sleep(5)
-points_img.show()
+#points_img.show()
 
 
